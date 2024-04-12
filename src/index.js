@@ -6,7 +6,7 @@ import syncMessages from './sync_messages.js'
 async function main() {
   await createTables()
 
-  const chainIds = [421614, 11155111, 421614]
+  const chainIds = [421614, 11155111, 167008]
   return Promise.all(chainIds.map(syncMessages))
 }
 

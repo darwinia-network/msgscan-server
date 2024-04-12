@@ -83,7 +83,7 @@ async function syncMessages(chainId) {
     try {
       const lastMessageIndex = await getLastMessageIndex(chainId)
       const messageAccepteds = await getMessageAcceptedsGt(chainId, lastMessageIndex)
-      console.log(`found ${messageAccepteds.length} new messages`)
+      console.log(`found ${messageAccepteds.length} new messages for ${chainId}`)
       await createMessages(messageAccepteds)
 
       await new Promise((resolve) => setTimeout(resolve, 2000))

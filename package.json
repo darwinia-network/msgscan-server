@@ -14,9 +14,10 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "postgres": "^3.4.4",
     "ramda": "^0.29.1",
-    "ramda-fantasy": "^0.8.0",
-    "postgres": "^3.4.4"
+    "ramda-fantasy": "^0.8.0"
   }
 }
