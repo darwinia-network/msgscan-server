@@ -1,0 +1,22 @@
+{
+  "name": "msgscan-server",
+  "version": "1.0.0",
+  "description": "Msgscan api server",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "msgport",
+    "msgscan"
+  ],
+  "author": "Aki Wu",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ramda": "^0.29.1",
+    "ramda-fantasy": "^0.8.0",
+    "postgres": "^3.4.4"
+  }
+}
