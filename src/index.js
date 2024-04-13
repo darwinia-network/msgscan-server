@@ -13,4 +13,4 @@ async function main() {
   return Promise.all(chainIds.map(syncMessages))
 }
 
-main().then(exit).catch(exit)
+main().then(exit).catch((error) => { console.error(error); exit(1) })
