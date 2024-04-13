@@ -10,6 +10,16 @@ async function getLastMessageIndex(chainId) {
   return result[0].max_index || 0
 }
 
+async function extractMsgportPayload(message) {
+  if (!message.messageEncoded.startsWith('0x394d1bca')) {
+    return { msgportFrom: null, msgportTo: null, msgportPayload: null }
+  }
+  const msgportFrom = '0x' + message.messageEncoded.slice(34, 74)
+  const msgportTo = '0x' + message.messageEncoded.slice(98, 138)
+  const msgportPayload = '0x' + message.messageEncoded.slice(266)
+  return { msgportFrom, msgportTo, msgportPayload }
+}
+
 async function createMessage(message) {
   const id = `${message.messageFromChainId}-${message.messageIndex}`
   console.log(`processing message ${id}`)
@@ -26,6 +36,7 @@ async function createMessage(message) {
   }
 
   // if not, create message
+  const { msgportFrom, msgportTo, msgportPayload } = await extractMsgportPayload(message)
   await sql`
     INSERT INTO public.${sql(MESSAGE_TABLE)} (
       id,
@@ -44,7 +55,10 @@ async function createMessage(message) {
       "acceptedTransactionHash",
       "acceptedTransactionIndex",
       "acceptedLogIndex",
-      "status"
+      "status",
+      "msgportFrom",
+      "msgportTo",
+      "msgportPayload"
     )
     VALUES (
       ${id},
@@ -63,7 +77,10 @@ async function createMessage(message) {
       ${message.transactionHash},
       ${message.transactionIndex},
       ${message.logIndex},
-      ${MESSAGE_STATUS.ACCEPTED}
+      ${MESSAGE_STATUS.ACCEPTED},
+      ${msgportFrom},
+      ${msgportTo},
+      ${msgportPayload}
     )
   `
 }
