@@ -1,16 +1,19 @@
 import sql from './db.js'
 
-async function messages() {
-  // check if table exists
+async function checkTableExists(tableName) {
   const exists = await sql`
     SELECT EXISTS (
       SELECT FROM information_schema.tables 
       WHERE  table_schema = 'public'
-      AND    table_name   = 'messages'
+      AND    table_name   = ${tableName}
     );
   `
+  return exists[0].exists
+}
 
-  if (exists[0].exists) {
+async function messages() {
+  // check if table exists
+  if (await checkTableExists('messages')) {
     console.log('table "messages" already exists')
     return
   }
@@ -55,4 +58,4 @@ const createTables = async () => {
   await messages()
 }
 
-export default createTables
+export { createTables, checkTableExists }
