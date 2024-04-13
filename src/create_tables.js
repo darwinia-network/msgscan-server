@@ -1,4 +1,4 @@
-import sql from './db.js'
+import sql from './db/db.js'
 
 async function messages() {
   // check if table exists

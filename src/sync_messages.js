@@ -1,5 +1,6 @@
 import fetchMessages from './sync_messages/fetch_messages.js'
-import updateRootReady from './sync_messages/update_root_ready.js'
+import setRootReady from './sync_messages/set_root_ready.js'
+import setDispatched from './sync_messages/set_dispatched.js'
 
 async function loop(chainId, fn) {
   while (true) {
@@ -17,7 +18,8 @@ async function loop(chainId, fn) {
 async function syncMessages(chainId) {
   await Promise.all([
     loop(chainId, fetchMessages),
-    loop(chainId, updateRootReady)
+    loop(chainId, setRootReady),
+    loop(chainId, setDispatched),
   ])
 }
 

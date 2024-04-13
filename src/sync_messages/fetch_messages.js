@@ -1,4 +1,4 @@
-import sql from '../db.js'
+import sql from '../db/db.js'
 import { MESSAGE_STATUS } from '../constants.js'
 
 async function getLastMessageIndex(chainId) {
