@@ -1,6 +1,6 @@
 import { exit } from 'process';
 
-import createTables from './create_tables.js'
+import createTables from './db/create_tables.js'
 import syncMessages from './sync_messages.js'
 
 async function main() {
@@ -11,4 +11,3 @@ async function main() {
 }
 
 main().then(exit)
-
