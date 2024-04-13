@@ -1,9 +1,11 @@
 import sql from './db.js'
 import { MESSAGE_STATUS } from '../constants.js'
 
+const MESSAGE_TABLE = 'Message'
+
 async function getLastMessageIndex(chainId) {
   const result = await sql`
-    SELECT max("messageIndex") as max_index FROM public."messages" WHERE "messageFromChainId" = ${chainId}
+    SELECT max("messageIndex") as max_index FROM public.${sql(MESSAGE_TABLE)} WHERE "messageFromChainId" = ${chainId}
   `
   return result[0].max_index || 0
 }
@@ -15,7 +17,7 @@ async function createMessage(message) {
   // check if message already exists
   const exists = await sql`
     SELECT EXISTS (
-      SELECT * FROM public."messages" WHERE id=${id}
+      SELECT * FROM public.${sql(MESSAGE_TABLE)} WHERE id=${id}
     );
   `
   if (exists[0].exists) {
@@ -25,7 +27,7 @@ async function createMessage(message) {
 
   // if not, create message
   await sql`
-    INSERT INTO public."messages" (
+    INSERT INTO public.${sql(MESSAGE_TABLE)} (
       id,
       "msgHash",
       root,
@@ -69,7 +71,7 @@ async function createMessage(message) {
 async function findMessagesByStatus(messageFromChainId, status) {
   const result = await sql`
     SELECT *
-    FROM public."messages"
+    FROM public.${sql(MESSAGE_TABLE)}
     WHERE "messageFromChainId" = ${messageFromChainId} and "status" = ${status}
   `
   return result
@@ -78,7 +80,7 @@ async function findMessagesByStatus(messageFromChainId, status) {
 async function findMessageByRoot(messageFromChainId, root) {
   const result = await sql`
     SELECT *
-    FROM public."messages"
+    FROM public.${sql(MESSAGE_TABLE)}
     WHERE "messageFromChainId" = ${messageFromChainId} and "root" = ${root}
   `
   return result[0]
@@ -86,7 +88,7 @@ async function findMessageByRoot(messageFromChainId, root) {
 
 async function updateMessageStatus(message, status) {
   await sql`
-    UPDATE public."messages"
+    UPDATE public.${sql(MESSAGE_TABLE)}
     SET status = ${status}
     WHERE id = ${message.id}
   `
@@ -98,11 +100,10 @@ async function updateMessage(message, fields) {
   }).join(', ')
 
   await sql`
-    UPDATE public."messages"
+    UPDATE public.${sql(MESSAGE_TABLE)}
     SET ${sql.raw(sets)}
     WHERE id = ${message.id}
   `
 }
-
 
 export { getLastMessageIndex, createMessage, findMessagesByStatus, findMessageByRoot, updateMessageStatus, updateMessage }
