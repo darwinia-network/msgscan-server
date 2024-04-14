@@ -8,7 +8,7 @@ async function isRootAggregated(message) {
     return false
   }
 
-  const messageOfRoot = await findMessageByRoot(message.messageToChainId, root.hash)
+  const messageOfRoot = await findMessageByRoot(root.hash)
   return messageOfRoot && message.acceptedBlockNumber <= messageOfRoot.acceptedBlockNumber
 }
 

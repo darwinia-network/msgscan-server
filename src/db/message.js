@@ -94,11 +94,11 @@ async function findMessagesByStatus(messageFromChainId, status) {
   return result
 }
 
-async function findMessageByRoot(messageFromChainId, root) {
+async function findMessageByRoot(root) {
   const result = await sql`
     SELECT *
     FROM public.${sql(MESSAGE_TABLE)}
-    WHERE "messageFromChainId" = ${messageFromChainId} and "root" = ${root}
+    WHERE "root" = ${root}
   `
   return result[0]
 }
