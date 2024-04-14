@@ -22,7 +22,6 @@ async function extractMsgportPayload(message) {
 
 async function createMessage(message) {
   const id = `${message.messageFromChainId}-${message.messageIndex}`
-  console.log(`processing message ${id}`)
 
   // check if message already exists
   const exists = await sql`

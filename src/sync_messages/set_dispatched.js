@@ -5,7 +5,6 @@ import { MESSAGE_STATUS } from '../constants.js'
 
 async function setDispatched(messageFromChainId) {
   const messages = await findMessagesByStatuses(messageFromChainId, [MESSAGE_STATUS.ACCEPTED, MESSAGE_STATUS.ROOT_READY])
-  console.log(`setDispatched: found ${messages.length} root ready messages for chain ${messageFromChainId}`)
 
   for (const message of messages) {
     const dispatched = await findMessageDispatchedByMsgHash(message.messageToChainId, message.msgHash)
@@ -24,6 +23,7 @@ async function setDispatched(messageFromChainId) {
       proof: transaction.input.slice(-32 * 64).match(/.{64}/g).map(item => `0x${item}`),
       status: dispatched.dispatchResult ? MESSAGE_STATUS.DISPATCH_SUCCESS : MESSAGE_STATUS.DISPATCH_FAILED,
     })
+    console.log(`message ${message.id} set dispatched`)
   }
 }
 
