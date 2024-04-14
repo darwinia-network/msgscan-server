@@ -85,6 +85,15 @@ async function createMessage(message) {
   `
 }
 
+async function findMessagesByStatuses(messageFromChainId, statuses) {
+  const result = await sql`
+    SELECT *
+    FROM public.${sql(MESSAGE_TABLE)}
+    WHERE "messageFromChainId" = ${messageFromChainId} and "status" IN ${sql(statuses)}
+  `
+  return result
+}
+
 async function findMessagesByStatus(messageFromChainId, status) {
   const result = await sql`
     SELECT *
@@ -112,15 +121,11 @@ async function updateMessageStatus(message, status) {
 }
 
 async function updateMessage(message, fields) {
-  const sets = Object.entries(fields).map(([key, value]) => {
-    return `"${key}" = ${value}`
-  }).join(', ')
-
   await sql`
     UPDATE public.${sql(MESSAGE_TABLE)}
-    SET ${sql.raw(sets)}
+    SET ${sql(fields)}
     WHERE id = ${message.id}
   `
 }
 
-export { getLastMessageIndex, createMessage, findMessagesByStatus, findMessageByRoot, updateMessageStatus, updateMessage }
+export { getLastMessageIndex, createMessage, findMessagesByStatus, findMessagesByStatuses, findMessageByRoot, updateMessageStatus, updateMessage }

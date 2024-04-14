@@ -1,10 +1,10 @@
-import { findMessagesByStatus, updateMessage } from '../db/message.js'
+import { findMessagesByStatuses, updateMessage } from '../db/message.js'
 import { findMessageDispatchedByMsgHash } from '../db/message_dispatched_v2.js'
 import { findTransactionByHash } from '../db/transaction.js'
 import { MESSAGE_STATUS } from '../constants.js'
 
 async function setDispatched(messageFromChainId) {
-  const messages = await findMessagesByStatus(messageFromChainId, MESSAGE_STATUS.ROOT_READY)
+  const messages = await findMessagesByStatuses(messageFromChainId, [MESSAGE_STATUS.ACCEPTED, MESSAGE_STATUS.ROOT_READY])
   console.log(`setDispatched: found ${messages.length} root ready messages for chain ${messageFromChainId}`)
 
   for (const message of messages) {
@@ -17,7 +17,7 @@ async function setDispatched(messageFromChainId) {
 
     await updateMessage(message, {
       dispatchBlockNumber: dispatched.blockNumber,
-      dispatchBlockTimestamp: dispatched.timestamp,
+      dispatchBlockTimestamp: dispatched.blockTimestamp,
       dispatchTransactionHash: dispatched.transactionHash,
       dispatchTransactionIndex: dispatched.transactionIndex,
       dispatchLogIndex: dispatched.logIndex,
