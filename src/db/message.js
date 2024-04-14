@@ -128,4 +128,16 @@ async function updateMessage(message, fields) {
   `
 }
 
-export { getLastMessageIndex, createMessage, findMessagesByStatus, findMessagesByStatuses, findMessageByRoot, updateMessageStatus, updateMessage }
+async function findMessagesWithMissingSigners() {
+  const result = await sql`
+    SELECT *
+    FROM public.${sql(MESSAGE_TABLE)}
+    WHERE status >= 1 and "acceptedBlockTimestamp" > EXTRACT(EPOCH FROM NOW() - interval '6666 hours') and (signers is null or json_array_length(signers::json) < 5)
+  `
+  return result
+}
+
+export { 
+  getLastMessageIndex, findMessagesByStatus, findMessagesByStatuses, findMessageByRoot, findMessagesWithMissingSigners,
+  updateMessageStatus, updateMessage, createMessage
+}
