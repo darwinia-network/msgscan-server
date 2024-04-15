@@ -13,7 +13,7 @@ async function findSigners(chainId, messageIndex) {
   for (const row of result) {
     const signer = row.signer
     if (!signerSet.has(signer)) {
-      signerSet.add(signer)
+      signerSet.add(`0x${signer.toString('hex')}`)
     }
   }
 
