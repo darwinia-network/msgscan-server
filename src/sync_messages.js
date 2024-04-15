@@ -6,7 +6,13 @@ import setSigners from './sync_messages/set_signers.js'
 async function loop(chainId, fn) {
   while (true) {
     try {
-      await fn(chainId)
+
+      if (chainId === null) {
+        await fn()
+      } else {
+        await fn(chainId)
+      }
+
       await new Promise((resolve) => setTimeout(resolve, 1000))
     } catch (error) {
       console.error(error)
@@ -21,7 +27,7 @@ async function syncMessages(chainId) {
     loop(chainId, fetchMessages),
     loop(chainId, setRootReady),
     loop(chainId, setDispatched),
-    loop(chainId, setSigners),
+    loop(null, setSigners),
   ])
 }
 
