@@ -12,7 +12,7 @@ async function isRootAggregated(message) {
   return messageOfRoot && message.acceptedBlockNumber <= messageOfRoot.acceptedBlockNumber
 }
 
-async function setRootReady(chainId) {
+async function doSetRootReady(chainId) {
   const messages = await findMessagesByStatus(chainId, MESSAGE_STATUS.ACCEPTED)
 
   for (const message of messages) {
@@ -20,6 +20,12 @@ async function setRootReady(chainId) {
       await updateMessageStatus(message, MESSAGE_STATUS.ROOT_READY)
       console.log(`message ${message.id} set root ready`)
     }
+  }
+}
+
+function setRootReady(chainId) {
+  return async function() {
+    await doSetRootReady(chainId)
   }
 }
 

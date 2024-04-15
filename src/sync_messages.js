@@ -3,16 +3,10 @@ import setRootReady from './sync_messages/set_root_ready.js'
 import setDispatched from './sync_messages/set_dispatched.js'
 import setSigners from './sync_messages/set_signers.js'
 
-async function loop(chainId, fn) {
+async function loop(fn) {
   while (true) {
     try {
-
-      if (chainId === null) {
-        await fn()
-      } else {
-        await fn(chainId)
-      }
-
+      await fn()
       await new Promise((resolve) => setTimeout(resolve, 1000))
     } catch (error) {
       console.error(error)
@@ -24,10 +18,10 @@ async function loop(chainId, fn) {
 
 async function syncMessages(chainId) {
   await Promise.all([
-    loop(chainId, fetchMessages),
-    loop(chainId, setRootReady),
-    loop(chainId, setDispatched),
-    loop(null, setSigners),
+    loop(fetchMessages(chainId)),
+    loop(setRootReady(chainId)),
+    loop(setDispatched(chainId)),
+    loop(setSigners),
   ])
 }
 

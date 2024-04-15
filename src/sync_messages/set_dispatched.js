@@ -3,7 +3,7 @@ import { findMessageDispatchedByMsgHash } from '../db/message_dispatched_v2.js'
 import { findTransactionByHash } from '../db/transaction.js'
 import { MESSAGE_STATUS } from '../constants.js'
 
-async function setDispatched(messageFromChainId) {
+async function doSetDispatched(messageFromChainId) {
   const messages = await findMessagesByStatuses(messageFromChainId, [MESSAGE_STATUS.ACCEPTED, MESSAGE_STATUS.ROOT_READY])
 
   for (const message of messages) {
@@ -24,6 +24,12 @@ async function setDispatched(messageFromChainId) {
       status: dispatched.dispatchResult ? MESSAGE_STATUS.DISPATCH_SUCCESS : MESSAGE_STATUS.DISPATCH_FAILED,
     })
     console.log(`message ${message.id} set dispatched`)
+  }
+}
+
+function setDispatched(chainId) {
+  return async function() {
+    await doSetDispatched(chainId)
   }
 }
 
